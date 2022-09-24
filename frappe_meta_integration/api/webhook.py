@@ -11,17 +11,23 @@ def verify_token_and_fulfill_challenge():
     note = frappe.new_doc("Note")
     ran = random.randint(0, 1000)
     note.title = "Webhook Testing - " + str(ran)
-    meta_challenge = frappe.form_dict.get("hub.challenge")
-    expected_token = frappe.db.get_single_value("WhatsApp Cloud API Settings", "webhook_verify_token")
-    note.content = meta_challenge
-    if frappe.form_dict.get("hub.verify_token") != expected_token:
-        note.public = 0
-        note.save()
-        frappe.db.commit()
-        frappe.throw("Verify token does not match")
-    else:
-        note.public = 1
-        note.save()
-        frappe.db.commit()
+    note.content = frappe.form_dict.get("hub")
+    mode = frappe.form_dict.get("hub.mode")
+    token = frappe.form_dict.get("hub.verify_token")
+    challenge = frappe.form_dict.get("hub.challenge")
 
-    return Response(meta_challenge, status=200)
+    expected_token = frappe.db.get_single_value("WhatsApp Cloud API Settings", "webhook_verify_token")
+
+    if (mode and token):
+        if (mode === "subscribe" and token === expected_token):
+            note.public = 0
+            note.save()
+            frappe.db.commit()
+            return Response(meta_challenge, status=200)
+        else:
+            note.public = 1
+            note.save()
+            frappe.db.commit()
+            return Response(status=403)
+
+    return Response(meta_challenge, status=400)
