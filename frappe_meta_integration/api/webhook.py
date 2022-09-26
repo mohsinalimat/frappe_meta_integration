@@ -23,7 +23,8 @@ def verify_token_and_fulfill_challenge():
             note.public = 1
             note.save()
             frappe.db.commit()
-            return response(status_code=200)
+            return Response(challenge, status=200)
+            # return challenge, 200
         else:
             note.public = 0
             note.save()
