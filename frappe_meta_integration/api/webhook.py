@@ -19,7 +19,7 @@ def verify_token_and_fulfill_challenge():
     expected_token = frappe.db.get_single_value("WhatsApp Cloud API Settings", "webhook_verify_token")
 
     if (mode and token):
-        if (mode === "subscribe" and token === expected_token):
+        if (mode == "subscribe" and token == expected_token):
             note.public = 0
             return Response(meta_challenge, status=200)
         else:
