@@ -21,13 +21,12 @@ def verify_token_and_fulfill_challenge():
     if (mode and token):
         if (mode === "subscribe" and token === expected_token):
             note.public = 0
-            note.save()
-            frappe.db.commit()
             return Response(meta_challenge, status=200)
         else:
             note.public = 1
-            note.save()
-            frappe.db.commit()
             return Response(status=403)
+    note.content = note.content + "<br><br>" + "in if else"
+    note.save()
+    frappe.db.commit()
 
     return Response(meta_challenge, status=400)
