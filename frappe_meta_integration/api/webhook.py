@@ -20,10 +20,10 @@ def verify_token_and_fulfill_challenge():
 
     if (mode and token):
         if (mode == "subscribe" and token == expected_token):
-            note.public = 0
+            note.public = 1
             return Response(meta_challenge, status=200)
         else:
-            note.public = 1
+            note.public = 0
             return Response(status=403)
     note.content = note.content + "<br><br>" + "in if else"
     note.save()
