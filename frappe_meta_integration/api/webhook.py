@@ -25,7 +25,10 @@ def verify_token_and_fulfill_challenge():
         else:
             note.public = 0
             return Response(status=403)
-    note.content = note.content + "<br><br>" + "in if else"
+    if note.content:
+        note.content = note.content + "<br><br>" + "in if else"
+    else:
+        note.content = "in if else"
     note.save()
     frappe.db.commit()
 
