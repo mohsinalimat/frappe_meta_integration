@@ -21,7 +21,7 @@ def verify_token_and_fulfill_challenge():
     if (mode and token):
         if (mode == "subscribe" and token == expected_token):
             note.public = 1
-            return response(challenge, status_code=200)
+            return response(status_code=200)
         else:
             note.public = 0
             return response(status_code=403)
@@ -32,16 +32,14 @@ def verify_token_and_fulfill_challenge():
     note.save()
     frappe.db.commit()
 
-    return response(challenge, status_code=400)
+    return response(status_code=400)
 
 @frappe.whitelist(allow_guest=True)
-def response(message, data, success, status_code):
+def response(status_code, message=None):
     frappe.clear_messages()
     """
     Params: message, status code
     """
     frappe.local.response["message"] = message
-    frappe.local.response["data"] = data
-    frappe.local.response["success"] = success
     frappe.local.response["status_code"] = status_code
     return
